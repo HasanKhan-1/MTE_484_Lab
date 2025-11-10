@@ -1,0 +1,102 @@
+#include <Arduino.h>
+#include "geeWhiz.h"
+
+// ================== Pins ===================
+int MOT_PIN = A0;   // motor angle sensor
+int BAL_PIN = A1;   // ball position sensor
+
+// =================== Setup ===================
+const float m = -0.012727;
+const float b = 5.128981;
+const float stiction_pos = -0.3;
+const float stiction_neg = 0.2;
+const int ORD = 6;
+const int TERMS = 7;
+
+const float numerator_coeffs[TERMS] = {0.000000000000000, 3.895902697104731, 0.587576580092025, 1.427922264042860, 1.403745515283152, -1.058665075983055, 0.143549064767519};
+const float denominator_coeffs[TERMS] = {1.000000000000000, 0.151336487059448, 0.274529278050395, 0.167766512303242, 0.082797948273825, 0.010339519605428, -0.007662273422280};
+
+float e_vals[TERMS] = {0.0}; //prev and curr 'e' values 
+float u_vals[TERMS] = {0.0}; //prev 'u' values
+
+const float Ts = 0.02764604299; 
+
+float setpoint_rad = 0.0;
+const float MAX_VOLTAGE = 6.0;
+const float MAX_ANGLE = 0.7;
+
+float saturate(float value, float sat_min, float sat_max){
+  if(value > sat_max) return sat_max;
+  if(value < sat_min) return sat_min;
+  return value;
+}
+
+void setup() {
+  Serial.begin(115200);
+  delay(300);
+  geeWhizBegin();
+  setMotorVoltage(0.0f);
+  set_control_interval_ms(Ts*1000);
+
+  for (int i = 0; i < TERMS; i++) {
+    e_vals[i] = 0.0;
+    u_vals[i] = 0.0;
+  }
+}
+
+void loop() {
+  //switching between setpoints of 0.7 and -0.7 rad 
+  setpoint_rad = -0.7;
+  delay(2000);
+  setpoint_rad = 0.7;
+  delay(2000);
+}
+
+void interval_control_code(void) {
+  int motor = analogRead(MOT_PIN);
+  float curr_rad = m * motor + b;
+
+  int raw_ball = analogRead(BAL_PIN);
+  float ball_pos = 0.00104773869*raw_ball - 0.32479899252; // precalculated
+
+  float setpoint_rad_saturated = saturate(setpoint_rad, -MAX_ANGLE, MAX_ANGLE);
+  float error = setpoint_rad_saturated - curr_rad;
+
+  //changing all prev e vals 
+  for (int i = TERMS-1; i > 0; i--) {
+    e_vals[i] = e_vals[i - 1];
+  }
+  e_vals[0] = error;
+
+  // getting numerator sum
+  float sum1 = 0.0;
+  for (int i = 0; i < TERMS; i++) {
+    sum1 += numerator_coeffs[i] * e_vals[i];
+  }
+
+  // geting denominator sum
+  float sum2 = 0.0;
+  for (int i = 1; i < TERMS; i++) {
+    sum2 += denominator_coeffs[i] * u_vals[i - 1];
+  }
+
+  float u = (sum1 - sum2)/denominator_coeffs[0];
+  float new_voltage = -u;
+
+  //apply stiction offsets
+  if (u > 0) {
+    new_voltage += stiction_pos;
+  } else if (u < 0) {
+    new_voltage += stiction_neg;
+  }
+ 
+  new_voltage = saturate(new_voltage, -MAX_VOLTAGE, MAX_VOLTAGE);
+  setMotorVoltage(new_voltage);
+
+  for (int i = ORD; i > 0; i--) {
+    u_vals[i] = u_vals[i - 1];
+  }
+  u_vals[0] = u;
+
+  Serial.println(ball_pos, 2);
+}
