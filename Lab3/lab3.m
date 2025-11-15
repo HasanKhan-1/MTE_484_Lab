@@ -1,6 +1,6 @@
 % setup important vals 
-T = 0.5528;
-tfinal =3;
+T = 0.2764;
+t_sim =20;
 s = tf('s');
 z = tf('z', T);
 
@@ -154,7 +154,7 @@ b = [zeros(m+size(beta,1),1);
 %% Determination of step response matrices
 
 % time horizon
-K = 30;
+K = 100;
 
 step_ry = zeros(K,m+nhat);
 
@@ -250,25 +250,42 @@ end
 
 %% Define constraints (using the scaled matrices)
 % IOP constraint
-Constraints = [A*[w; x; xhat] == b];
+% Define specification parameters
+C1 = 7;      % Settling time [seconds]
+C2 = 0.45;   % Percent overshoot (45%)
+C3 = 0.7;    % Input saturation
+
+% Calculate derived values
+y_ss = -steadyState * [x; xhat] * 0.15;
+jhat = round(C1/T);
+
+Objective = 0;
+
+% IOP constraint
+Constraints = [A * [w; x; xhat] == b];
 
 % Input saturation constraint
-Constraints = [Constraints, max(step_ru * w) <= 6/1.4, min(step_ru * w) >= -6/1.4];
+Constraints = [Constraints,
+               max(step_ru*w)*0.15 <= C3,
+               min(step_ru*w)*0.15 >= -C3];
 
 % Steady state constraint
-% At steady state, output should reach yref_final
-Constraints = [Constraints,
-               steadyState*[x; xhat] == 0];
+if ~controller_integrator_flag
+    Constraints = [Constraints,
+                   0.15 + steadyState*[x; xhat]*0.15 == 0];
+else
+    Constraints = [Constraints,
+                   steadyState*[x; xhat]*0.15 + [0.15; 0; 0] == [0; 0; 0]];
+end
 
 % Overshoot constraint
-Constraints = [Constraints, max(step_ry*[x;xhat]) <= 1.45];
+Constraints = [Constraints,
+               max(step_ry * [x; xhat])*0.15 <= (1+C2)*y_ss];
 
 % Settling time constraint
-jhat = round(7/T);
 Constraints = [Constraints,
-              max(step_ry(jhat:end,:)*[x; xhat]) <= 1.02,
-              min(step_ry(jhat:end,:)*[x; xhat]) >= 0.98];
-
+               max(step_ry(jhat:end,:) * [x; xhat]*0.15) <= 1.02 * y_ss,
+               min(step_ry(jhat:end,:) * [x; xhat]*0.15) >= 0.98 * y_ss];
 %% Solving the optimization problem
 
 % set some options for YALMIP and solver
@@ -352,20 +369,21 @@ X = tf(num,den,T);
 %zero(X)
 %pole(X)
 
+
 %% Verify design in DT
 
 % compute D by hand
-j = sqrt(-1);
-D = (0.15246*(z-0.8423)*(z-0.8))/((z+0.4903)*(z-0.7796)*(z-0.3107));
-
-% compute T_ry and T_ru by hand  (using Nf, Dg, etc)
-T_ry = (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128))/...
-       (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128) + ...
-        (z+0.4903)*(z-0.7796)*(z-0.3107)*(z-1)^2*(z-0.8));
-T_ru = (0.15246*(z-0.8423)*(z-0.8)*(z-1)^2*(z-0.8))/...
-       (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128) + ...
-        (z+0.4903)*(z-0.7796)*(z-0.3107)*(z-1)^2*(z-0.8));
-
+% j = sqrt(-1);
+% D = (0.15246*(z-0.8423)*(z-0.8))/((z+0.4903)*(z-0.7796)*(z-0.3107));
+% 
+% % compute T_ry and T_ru by hand  (using Nf, Dg, etc)
+% T_ry = (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128))/...
+%        (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128) + ...
+%         (z+0.4903)*(z-0.7796)*(z-0.3107)*(z-1)^2*(z-0.8));
+% T_ru = (0.15246*(z-0.8423)*(z-0.8)*(z-1)^2*(z-0.8))/...
+%        (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128) + ...
+%         (z+0.4903)*(z-0.7796)*(z-0.3107)*(z-1)^2*(z-0.8));
+% 
 figure(1)
 hold on;
 step(T_ry,'g');
@@ -375,3 +393,19 @@ figure(2)
 hold on;
 step(T_ru,'g');
 hold off;
+
+%% Print numerator and denominator in space-delimited format
+
+%% Calculate D = W/X
+D = W/X;
+
+% Get numerator and denominator
+[num_D, den_D] = tfdata(D, 'v');
+
+% Print in space-delimited format
+fprintf('Numerator: [');
+fprintf('%g ', num_D);
+fprintf(']\n');
+fprintf('Denominator: [');
+fprintf('%g ', den_D);
+fprintf(']\n');
