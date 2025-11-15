@@ -1,4 +1,3 @@
-
 % setup important vals 
 T = 0.5528;
 tfinal =3;
@@ -15,15 +14,12 @@ controller_integrator_flag = 0;
 G_C = -0.231035423/(s^2);
 
 %Convert to cont. plant -> DT
-G_D = c2d(G_C, T);
-
-
+G_D = c2d(G_C, T)
 [r, p, k] = residue(G_D.Numerator{1}, G_D.Denominator{1});
 
 r
 p
 k
-
 %% Plant Poles and Coefficients in its Partial Fraction Decomposition
 
 stableRealPlantPoles = [];
@@ -42,14 +38,14 @@ stablePlantPoles = [stableRealPlantPoles stableComplexPlantPoles];
 qs = [stablePlantPoles unstablePlantPoles];
 
 % coefficents go in order of the poles
-cs = [K2*K3*0.5*T^2]
+cs = [-0.035300807939028];
 
 if double_integrator_flag
     % coefficients include both c_n for 1/(z-1) and c_(n+1) for 1/(z-1)^2 for
     %       the pole at z=1
-    c_double_integrator = K2*K3*T^2;
-    cs = [cs c_double_integrator]
-end     
+    c_double_integrator = -0.070601615878056;
+    cs = [cs c_double_integrator];
+end
 
 n = length(qs);
 nhat = length(stablePlantPoles);
@@ -69,15 +65,16 @@ G
 
 %% Poles Chosen in the Simple Pole Approximation of W[z]
 
-j = sqrt(-1);
-realWPoles = [];
-complexWPoles = [];
-% for checking the integrator in the controller:
-complexWPoles = [];
-ps = [realWPoles complexWPoles];
+% j = sqrt(-1);
+% realWPoles = [];
+% complexWPoles = [];
+% % for checking the integrator in the controller:
+% complexWPoles = [];
+% ps = [realWPoles complexWPoles];
 
-mreal = length(realWPoles);
-mcomplex = length(complexWPoles);
+ps = generate_poles(30,0.9,0);
+mreal = sum(imag(ps) == 0);     % number of purely real poles
+mcomplex = sum(imag(ps) > 0)*2; % count each conjugate pair twice
 m = length(ps);
 
 %% Calculation of alpha, beta, gamma, and gamma hat
@@ -139,10 +136,10 @@ for k=1:nhat
 end
 
 % verify on a simple example that alpha, beta, gamma, and gammahat are correct!
-%alpha
-%beta
-%gamma
-%gammaHat
+alpha
+beta
+gamma
+gammaHat
 
 %% Determination of A and b matrices for IOP equations
 
@@ -179,8 +176,8 @@ for k=1:K
 end
 
 % verify on a simple example that step_ry and step_ru are correct!
-%step_ry
-%step_ru
+step_ry
+step_ru
 
 %% Determination of steady state vector
 
@@ -246,40 +243,33 @@ end
 
 Objective = 0;
 
-%Constrain Vals given to us!
-p_overshoot   = 0.45;
-input_sat     = 0.7;
-settling_time = 7;
-
-y_ss = -steadyState * [x; xhat]*0.15;
-jhat = round(settling_time/T);
-
 % IOP constraint
 Constraints = [A*[w;x;xhat] == b];
 
 % input saturation constraint
 Constraints = [Constraints,
-               max(step_ru*w)*0.15 <= input_sat
-               min(step_ru*w)*0.15 >= -input_sat];
+               max(step_ru*w) <= 0.16];
 
 % steady state constraint
 if ~controller_integrator_flag
     Constraints = [Constraints,
-                   0.15+steadyState*[x;xhat]*0.15==0];
+                   steadyState*[x;xhat]+1==0];
 else
     Constraints = [Constraints,
-                   steadyState*[x;xhat]*0.15+[0.15;0;0]==[0;0;0]];
+                   steadyState*[x;xhat]+[1;0;0]==[0;0;0]];
 end
 
 % overshoot constraint
 Constraints = [Constraints,
-               max(step_ry*[x;xhat])*0.15 <= (1+p_overshoot)*y_ss];
+               max(step_ry*[x;xhat]) <= 1.48*(-steadyState(1,:)*[x;xhat])];
 
 % settling time constraint
+jhat = ceil(0.14/T);
+jhat
 Constraints = [Constraints,
-               max(step_ry(jhat:end,:)*[x;xhat]*0.15) <= ...
+               max(step_ry(jhat:end,:)*[x;xhat]) <= ...
                1.02*(-steadyState(1,:)*[x;xhat]),
-               min(step_ry(jhat:end,:)*[x;xhat]*0.15) >= ...
+               min(step_ry(jhat:end,:)*[x;xhat]) >= ...
                0.98*(-steadyState(1,:)*[x;xhat])];
 
 %% Solving the optimization problem
