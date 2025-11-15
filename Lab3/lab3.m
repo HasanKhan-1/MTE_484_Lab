@@ -239,38 +239,35 @@ for i=1:(ncomplex/2)
 end
 
 
-%% Defining the objective function and constraints for the optimization
+%% Define the step change
+% yref_initial = 0.10;
+% yref_final = 0.25;
+% step_magnitude = yref_final - yref_initial;
 
-Objective = 0;
+%% Scale the step response matrices FIRST
+% step_ru = step_ru * step_magnitude;
+% step_ry = step_ry * step_magnitude + yref_initial;
 
+%% Define constraints (using the scaled matrices)
 % IOP constraint
-Constraints = [A*[w;x;xhat] == b];
+Constraints = [A*[w; x; xhat] == b];
 
-% input saturation constraint
+% Input saturation constraint
+Constraints = [Constraints, max(step_ru * w) <= 6/1.4, min(step_ru * w) >= -6/1.4];
+
+% Steady state constraint
+% At steady state, output should reach yref_final
 Constraints = [Constraints,
-               max(step_ru*w) <= 0.16];
+               steadyState*[x; xhat] == 0];
 
-% steady state constraint
-if ~controller_integrator_flag
-    Constraints = [Constraints,
-                   steadyState*[x;xhat]+1==0];
-else
-    Constraints = [Constraints,
-                   steadyState*[x;xhat]+[1;0;0]==[0;0;0]];
-end
+% Overshoot constraint
+Constraints = [Constraints, max(step_ry*[x;xhat]) <= 1.45];
 
-% overshoot constraint
+% Settling time constraint
+jhat = round(7/T);
 Constraints = [Constraints,
-               max(step_ry*[x;xhat]) <= 1.48*(-steadyState(1,:)*[x;xhat])];
-
-% settling time constraint
-jhat = ceil(0.14/T);
-jhat
-Constraints = [Constraints,
-               max(step_ry(jhat:end,:)*[x;xhat]) <= ...
-               1.02*(-steadyState(1,:)*[x;xhat]),
-               min(step_ry(jhat:end,:)*[x;xhat]) >= ...
-               0.98*(-steadyState(1,:)*[x;xhat])];
+              max(step_ry(jhat:end,:)*[x; xhat]) <= 1.02,
+              min(step_ry(jhat:end,:)*[x; xhat]) >= 0.98];
 
 %% Solving the optimization problem
 
