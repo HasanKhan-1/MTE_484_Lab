@@ -15,9 +15,14 @@ controller_integrator_flag = 0;
 G_C = -0.231035423/(s^2);
 
 %Convert to cont. plant -> DT
-G_D = c2d(G_C, T)
+G_D = c2d(G_C, T);
 
 
+[r, p, k] = residue(G_D.Numerator{1}, G_D.Denominator{1});
+
+r
+p
+k
 
 %% Plant Poles and Coefficients in its Partial Fraction Decomposition
 
@@ -37,14 +42,14 @@ stablePlantPoles = [stableRealPlantPoles stableComplexPlantPoles];
 qs = [stablePlantPoles unstablePlantPoles];
 
 % coefficents go in order of the poles
-cs = [-0.0353 0.0706];
+cs = [K2*K3*0.5*T^2]
 
-% if double_integrator_flag
-%     % coefficients include both c_n for 1/(z-1) and c_(n+1) for 1/(z-1)^2 for
-%     %       the pole at z=1
-%     c_double_integrator = 4;
-%     cs = [cs c_double_integrator];
-% end     
+if double_integrator_flag
+    % coefficients include both c_n for 1/(z-1) and c_(n+1) for 1/(z-1)^2 for
+    %       the pole at z=1
+    c_double_integrator = 4;
+    cs = [cs c_double_integrator]
+end     
 
 n = length(qs);
 nhat = length(stablePlantPoles);

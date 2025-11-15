@@ -1,9 +1,6 @@
 
-% setup important vals 
-T = 0.5528;
-tfinal =3;
-s = tf('s');
-z = tf('z', T);
+% set time step
+T = 0.01;
 
 % does the plant have a double integrator?
 double_integrator_flag = 1;
@@ -11,30 +8,19 @@ double_integrator_flag = 1;
 % should the controller have an integrator?
 controller_integrator_flag = 0;
 
-%Define the cont. plant
-G_C = -0.231035423/(s^2);
-
-%Convert to cont. plant -> DT
-G_D = c2d(G_C, T);
-
-
-[r, p, k] = residue(G_D.Numerator{1}, G_D.Denominator{1});
-
-r
-p
-k
-
 %% Plant Poles and Coefficients in its Partial Fraction Decomposition
 
-stableRealPlantPoles = [];
+stableRealPlantPoles = [0.8];
 stableComplexPlantPoles = [];
 unstablePlantPoles = [1];
 
 if double_integrator_flag
     if unstablePlantPoles(end) ~= 1
         disp('The final unstable plant pole must be z=1!');
+        stop
     elseif length(find(unstablePlantPoles == 1)) > 1
   disp('There should only be one pole at z=1 included in unstablePlantPoles!');
+        stop
     end
 end
 
@@ -42,13 +28,13 @@ stablePlantPoles = [stableRealPlantPoles stableComplexPlantPoles];
 qs = [stablePlantPoles unstablePlantPoles];
 
 % coefficents go in order of the poles
-cs = [K2*K3*0.5*T^2]
+cs = [2 3];
 
 if double_integrator_flag
     % coefficients include both c_n for 1/(z-1) and c_(n+1) for 1/(z-1)^2 for
     %       the pole at z=1
-    c_double_integrator = K2*K3*T^2;
-    cs = [cs c_double_integrator]
+    c_double_integrator = 4;
+    cs = [cs c_double_integrator];
 end     
 
 n = length(qs);
@@ -71,9 +57,9 @@ G
 
 j = sqrt(-1);
 realWPoles = [];
-complexWPoles = [];
+complexWPoles = [0.4+0.1*j 0.4-0.1*j 0.5+0.1*j 0.5-0.1*j];
 % for checking the integrator in the controller:
-complexWPoles = [];
+complexWPoles = [0.4+0.1*j 0.4-0.1*j 0.5+0.1*j 0.5-0.1*j 0.6+0.1*j 0.6-0.1*j];
 ps = [realWPoles complexWPoles];
 
 mreal = length(realWPoles);
@@ -246,40 +232,32 @@ end
 
 Objective = 0;
 
-%Constrain Vals given to us!
-p_overshoot   = 0.45;
-input_sat     = 0.7;
-settling_time = 7;
-
-y_ss = -steadyState * [x; xhat]*0.15;
-jhat = round(settling_time/T);
-
 % IOP constraint
 Constraints = [A*[w;x;xhat] == b];
 
 % input saturation constraint
 Constraints = [Constraints,
-               max(step_ru*w)*0.15 <= input_sat
-               min(step_ru*w)*0.15 >= -input_sat];
+               max(step_ru*w) <= 0.16];
 
 % steady state constraint
 if ~controller_integrator_flag
     Constraints = [Constraints,
-                   0.15+steadyState*[x;xhat]*0.15==0];
+                   steadyState*[x;xhat]+1==0];
 else
     Constraints = [Constraints,
-                   steadyState*[x;xhat]*0.15+[0.15;0;0]==[0;0;0]];
+                   steadyState*[x;xhat]+[1;0;0]==[0;0;0]];
 end
 
 % overshoot constraint
 Constraints = [Constraints,
-               max(step_ry*[x;xhat])*0.15 <= (1+p_overshoot)*y_ss];
+               max(step_ry*[x;xhat]) <= 1.48*(-steadyState(1,:)*[x;xhat])];
 
 % settling time constraint
+jhat = 0.14/T;
 Constraints = [Constraints,
-               max(step_ry(jhat:end,:)*[x;xhat]*0.15) <= ...
+               max(step_ry(jhat:end,:)*[x;xhat]) <= ...
                1.02*(-steadyState(1,:)*[x;xhat]),
-               min(step_ry(jhat:end,:)*[x;xhat]*0.15) >= ...
+               min(step_ry(jhat:end,:)*[x;xhat]) >= ...
                0.98*(-steadyState(1,:)*[x;xhat])];
 
 %% Solving the optimization problem
