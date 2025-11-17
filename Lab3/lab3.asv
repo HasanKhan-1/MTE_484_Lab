@@ -1,5 +1,5 @@
 % setup important vals 
-T = 0.5528;
+T = 0.2764;
 t_sim =20;
 s = tf('s');
 z = tf('z', T);
@@ -69,33 +69,11 @@ G
 realWPoles = [];
 % complexWPoles = [];
 % % for checking the integrator in the controller:
-
-
+% complexWPoles = [ -0.213734070429782 + 0.091201683852422i,  -0.213734070429782 - 0.091201683852422i, 0.0973902-0.313871j, 0.0973902+0.313871j,0.321582463137919 + 0.335536465085613i, 0.321582463137919 - 0.335536465085613i ];
 % ps = [realWPoles complexWPoles];
 
-ps = generate_poles(20, 0.80, 0);  % Your generated poles
-
-fprintf('complexWPoles = [\n');
-for k = 1:length(ps)
-    pole = ps(k);
-    if imag(pole) == 0
-        % Real pole
-        fprintf('    %.15g', real(pole));
-    else
-        % Complex pole
-        fprintf('    %.15g%+.15gj', real(pole), imag(pole));
-    end
-    
-    % Print comma after each pole except the last
-    if k < length(ps)
-        fprintf(',\n');
-    else
-        fprintf('\n');
-    end
-end
-fprintf('];\n');
-
-
+ps = generate_poles(30,0.9,0);
+ps
 mreal = sum(imag(ps) == 0);     % number of purely real poles
 mcomplex = sum(imag(ps) > 0)*2; % count each conjugate pair twice
 m = length(ps);
@@ -263,13 +241,13 @@ end
 
 
 %% Define the step change
-yref_initial = 0.10;
-yref_final = 0.25;
-step_magnitude = yref_final - yref_initial;
+% yref_initial = 0.10;
+% yref_final = 0.25;
+% step_magnitude = yref_final - yref_initial;
 
 %% Scale the step response matrices FIRST
-step_ru = step_ru * step_magnitude;
-step_ry = step_ry * step_magnitude + yref_initial;
+% step_ru = step_ru * step_magnitude;
+% step_ry = step_ry * step_magnitude + yref_initial;
 
 %% Define constraints (using the scaled matrices)
 % IOP constraint
@@ -407,15 +385,15 @@ X = tf(num,den,T);
 %        (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128) + ...
 %         (z+0.4903)*(z-0.7796)*(z-0.3107)*(z-1)^2*(z-0.8));
 % 
-figure(1)
-hold on;
-step(T_ry,'g');
-hold off;
-
-figure(2)
-hold on;
-step(T_ru,'g');
-hold off;
+% figure(1)
+% hold on;
+% step(T_ry,'g');
+% hold off;
+% 
+% figure(2)
+% hold on;
+% step(T_ru,'g');
+% hold off;
 
 %% Print numerator and denominator in space-delimited format
 
@@ -427,8 +405,8 @@ D = W/X;
 
 % Print in space-delimited format
 fprintf('Numerator: [');
-fprintf('%.15g, ', num_D);
+fprintf('%g, ', num_D);
 fprintf(']\n');
 fprintf('Denominator: [');
-fprintf('%.15g, ', den_D);
+fprintf('%g, ', den_D);
 fprintf(']\n');
