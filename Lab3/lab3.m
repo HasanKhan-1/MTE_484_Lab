@@ -1,5 +1,7 @@
+clear all; 
+
 % setup important vals 
-T = 0.5528;
+T = 0.2764;
 t_sim =20;
 s = tf('s');
 z = tf('z', T);
@@ -65,15 +67,68 @@ G
 
 %% Poles Chosen in the Simple Pole Approximation of W[z]
 
-% j = sqrt(-1);
+j = sqrt(-1);
 realWPoles = [];
-% complexWPoles = [];
+complexWPoles = [
+    -0.174755349006019-0.0745692161269289j,
+    -0.174755349006019+0.0745692161269289j,
+    0.0796291245566816-0.25663047855299j,
+    0.0796291245566816+0.25663047855299j,
+
+
+    % 0.325720042781098-0.0469729042180667j,
+    % 0.325720042781098+0.0469729042180667j,
+    % 0.262935410657165+0.274344618723509j,
+    % 0.262935410657165-0.274344618723509j,
+
+    -0.0308481493759639+0.42373150895358j,
+    -0.0308481493759639-0.42373150895358j,
+    
+    % -0.343194636452616+0.314352416103578j,
+    % -0.343194636452616-0.314352416103578j,
+    -0.50216482974167+0.0230322332942173j,
+    -0.50216482974167-0.0230322332942173j,
+    -0.443009134868378-0.304208656062203j,
+    -0.443009134868378+0.304208656062203j,
+    % -0.201250312804582-0.533290082034213j,
+    % -0.201250312804582+0.533290082034213j,
+    % 0.127838682374132-0.587075183676542j,
+    % 0.127838682374132+0.587075183676542j,
+    % 0.43483934949869-0.456086329687217j,
+    % 0.43483934949869+0.456086329687217j,
+    % 0.631360429921176-0.1859677593825j,
+    % 0.631360429921176+0.1859677593825j,
+    % 0.669285838330017+0.146138518573598j,
+    % 0.669285838330017-0.146138518573598j,
+    % 0.544899474138684+0.456601098425514j,
+    % 0.544899474138684-0.456601098425514j,
+    % 0.29183689461823+0.675522928507677j,
+    % 0.29183689461823-0.675522928507677j,
+    % -0.0322628402373448+0.759314894585783j,
+    % -0.0322628402373448-0.759314894585783j,
+    % -0.360962194734751+0.695274258096955j,
+    % -0.360962194734751-0.695274258096955j,
+    % -0.632743203757354+0.499435719686607j,
+    % -0.632743203757354-0.499435719686607j,
+    % -0.801186093813039+0.209763779238943j,
+    % -0.801186093813039-0.209763779238943j,
+    % -0.840746417170764-0.12306690056438j,
+    % -0.840746417170764+0.12306690056438j,
+    % -0.748206641906153-0.445294083732893j,
+    % -0.748206641906153+0.445294083732893j,
+    % -0.540512485155744-0.708552223474574j,
+    % -0.540512485155744+0.708552223474574j,
+    % -0.250047559269405-0.87622840521374j,
+    % -0.250047559269405+0.87622840521374j,
+    % 0.0814997535305684-0.927231249567472j,
+    % 0.0814997535305684+0.927231249567472j,
+    % 0.409602765712938-0.857161346725523j,
+    % 0.409602765712938+0.857161346725523j
+];
 % % for checking the integrator in the controller:
 
-
-% ps = [realWPoles complexWPoles];
-
-ps = generate_poles(20, 0.80, 0);  % Your generated poles
+ps = [realWPoles complexWPoles];
+% ps = generate_poles(50, 0.95, 0);  % Your generated poles
 
 fprintf('complexWPoles = [\n');
 for k = 1:length(ps)
@@ -262,25 +317,18 @@ for i=1:(ncomplex/2)
 end
 
 
-%% Define the step change
+% %% Define the step change
 yref_initial = 0.10;
 yref_final = 0.25;
 step_magnitude = yref_final - yref_initial;
-
-%% Scale the step response matrices FIRST
+% 
+% %% Scale the step response matrices FIRST
 step_ru = step_ru * step_magnitude;
-step_ry = step_ry * step_magnitude + yref_initial;
+step_ry = step_ry * step_magnitude;
+steadyState = steadyState * step_magnitude; 
 
 %% Define constraints (using the scaled matrices)
 % IOP constraint
-% Define specification parameters
-C1 = 7;      % Settling time [seconds]
-C2 = 0.45;   % Percent overshoot (45%)
-C3 =  0.7;    % Input saturation
-
-% Calculate derived values
-y_ss = -steadyState * [x; xhat] * 0.15;
-jhat = round(C1/T);
 
 Objective = 0;
 
@@ -288,27 +336,30 @@ Objective = 0;
 Constraints = [A * [w; x; xhat] == b];
 
 % Input saturation constraint
-Constraints = [Constraints,
-               max(step_ru*w)*0.15 <= C3,
-               min(step_ru*w)*0.15 >= -C3];
+% Constraints = [Constraints,
+%                max(step_ru*w)*0.15 <= C3,
+%                min(step_ru*w)*0.15 >= -C3];
 
 % Steady state constraint
 if ~controller_integrator_flag
     Constraints = [Constraints,
-                   0.15 + steadyState*[x; xhat]*0.15 == 0];
+                   0.15 + steadyState*[x; xhat] == 0];
 else
-    Constraints = [Constraints,
-                   steadyState*[x; xhat]*0.15 + [0.15; 0; 0] == [0; 0; 0]];
+    Constraints = [Constraints, 
+        steadyState*[x; xhat] + [0.15; 0; 0] == [0; 0; 0]];
 end
+
+y_ss = (-steadyState(1,:)*[x;xhat]); 
+jhat = 7/T; 
 
 % Overshoot constraint
 Constraints = [Constraints,
-               max(step_ry * [x; xhat])*0.15 <= (1+C2)*y_ss];
+               max(step_ry * [x; xhat]) <= (1.45)*y_ss];
 
 % Settling time constraint
 Constraints = [Constraints,
-               max(step_ry(jhat:end,:) * [x; xhat]*0.15) <= 1.02 * y_ss,
-               min(step_ry(jhat:end,:) * [x; xhat]*0.15) >= 0.98 * y_ss];
+               max(step_ry(jhat:end,:) * [x; xhat]) <= 1.02 * y_ss,
+               min(step_ry(jhat:end,:) * [x; xhat]) >= 0.98 * y_ss];
 %% Solving the optimization problem
 
 % set some options for YALMIP and solver
