@@ -1,0 +1,21 @@
+{
+    "GraphicalInterface":{
+        "ExternalFileReferences":[
+            {
+                "Path":"$bdroot\/Discretized controller",
+                "Reference":"cstblocks\/LTI System",
+                "SID":"58",
+                "Type":"LIBRARY_BLOCK"
+            },
+            {
+                "Path":"$bdroot\/Plant",
+                "Reference":"cstblocks\/LTI System",
+                "SID":"9",
+                "Type":"LIBRARY_BLOCK"
+            }
+        ],
+        "PreCompExecutionDomainType":"Unset",
+        "SimulinkSubDomainType":"Simulink",
+        "SolverName":"ode45"
+    }
+}

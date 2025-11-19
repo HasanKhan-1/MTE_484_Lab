@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModelInformation Version="1.0">
+  <Model>
+    <P Name="SavedCharacterEncoding">UTF-8</P>
+    <Object PropName="HDLParams" ObjectID="1" ClassName="slprops.hdlmdlprops">
+      <Array PropName="mdlProps" Type="Cell" Dimension="1*2">
+        <Cell Class="char">HDLSubsystem</Cell>
+        <Cell Class="char">sampled_data_system_new</Cell>
+      </Array>
+    </Object>
+    <P Name="ScopeRefreshTime">0.035000</P>
+    <P Name="OverrideScopeRefreshTime">on</P>
+    <P Name="DisableAllScopes">off</P>
+    <P Name="DataTypeOverride">UseLocalSettings</P>
+    <P Name="DataTypeOverrideAppliesTo">AllNumericTypes</P>
+    <P Name="MinMaxOverflowLogging">UseLocalSettings</P>
+    <P Name="MinMaxOverflowArchiveMode">Overwrite</P>
+    <P Name="FPTRunName">Run 1</P>
+    <P Name="MaxMDLFileLineLength">120</P>
+    <Object PropName="BdWindowsInfo" ObjectID="2" ClassName="Simulink.BDWindowsInfo">
+      <Object PropName="WindowsInfo" ObjectID="3" ClassName="Simulink.WindowInfo">
+        <P Name="IsActive" Class="logical">1</P>
+        <P Name="Location" Class="double">[2147.0, 36.0, 1377.0, 995.0]</P>
+        <Object PropName="ModelBrowserInfo" ObjectID="4" ClassName="Simulink.ModelBrowserInfo">
+          <P Name="Visible" Class="logical">0</P>
+          <P Name="DockPosition" Class="char">Left</P>
+          <P Name="Width" Class="int32">50</P>
+          <P Name="Height" Class="int32">50</P>
+          <P Name="Filter" Class="int32">9</P>
+        </Object>
+        <Object PropName="ExplorerBarInfo" ObjectID="5" ClassName="Simulink.ExplorerBarInfo">
+          <P Name="Visible" Class="logical">1</P>
+        </Object>
+        <Object PropName="EditorsInfo" ObjectID="6" ClassName="Simulink.EditorInfo">
+          <P Name="IsActive" Class="logical">1</P>
+          <P Name="ViewObjType" Class="char">SimulinkTopLevel</P>
+          <P Name="LoadSaveID" Class="char">0</P>
+          <P Name="Extents" Class="double">[1339.0, 540.0]</P>
+          <P Name="ZoomFactor" Class="double">1.4528564690072787</P>
+          <P Name="Offset" Class="double">[-151, -75]</P>
+        </Object>
+      </Object>
+    </Object>
+    <ConfigManagerSettings>
+      <P Name="ModifiedByFormat">%&lt;Auto&gt;</P>
+      <P Name="ModifiedDateFormat">%&lt;Auto&gt;</P>
+      <P Name="RTWModifiedTimeStamp">584967427</P>
+      <P Name="ModelVersionFormat">1.%&lt;AutoIncrement:0&gt;</P>
+    </ConfigManagerSettings>
+    <EditorSettings>
+      <P Name="SampleTimeColors">off</P>
+      <P Name="SampleTimeAnnotations">off</P>
+      <P Name="LibraryLinkDisplay">none</P>
+      <P Name="WideLines">off</P>
+      <P Name="ShowLineDimensions">off</P>
+      <P Name="ShowPortDataTypes">off</P>
+      <P Name="ShowDesignRanges">off</P>
+      <P Name="ShowLoopsOnError">on</P>
+      <P Name="IgnoreBidirectionalLines">off</P>
+      <P Name="ShowStorageClass">off</P>
+      <P Name="ShowTestPointIcons">on</P>
+      <P Name="ShowSignalResolutionIcons">on</P>
+      <P Name="ShowViewerIcons">on</P>
+      <P Name="ShowLinearizationAnnotations">on</P>
+      <P Name="ShowMarkup">on</P>
+      <P Name="BlockNameDataTip">off</P>
+      <P Name="BlockParametersDataTip">off</P>
+      <P Name="BlockDescriptionStringDataTip">off</P>
+      <P Name="BrowserShowLibraryLinks">off</P>
+      <P Name="BrowserLookUnderMasks">off</P>
+    </EditorSettings>
+    <SimulationSettings>
+      <P Name="SimulationMode">normal</P>
+      <P Name="PauseTimes">5</P>
+      <P Name="NumberOfSteps">1</P>
+      <P Name="SnapshotBufferSize">10</P>
+      <P Name="SnapshotInterval">10</P>
+      <P Name="NumberOfLastSnapshots">0</P>
+      <P Name="LinearizationMsg">none</P>
+      <P Name="Profile">off</P>
+      <P Name="ParamWorkspaceSource">MATLABWorkspace</P>
+      <P Name="AccelSystemTargetFile">accel.tlc</P>
+      <P Name="AccelTemplateMakefile">accel_default_tmf</P>
+      <P Name="AccelMakeCommand">make_rtw</P>
+      <P Name="TryForcingSFcnDF">off</P>
+      <Object PropName="DataLoggingOverride" ObjectID="10" ClassName="Simulink.SimulationData.ModelLoggingInfo">
+        <P Name="model_" Class="char">sampled_data_system_new</P>
+        <Array PropName="logAsSpecifiedByModels_" Type="Cell" Dimension="1*1">
+          <Cell Class="char">sampled_data_system_new</Cell>
+        </Array>
+        <Array PropName="logAsSpecifiedByModelsSSIDs_" Type="Cell" Dimension="1*1">
+          <Cell Class="char"></Cell>
+        </Array>
+      </Object>
+    </SimulationSettings>
+    <Verification>
+      <P Name="RecordCoverage">off</P>
+      <P Name="CovPath">/</P>
+      <P Name="CovSaveName">covdata</P>
+      <P Name="CovMetricSettings">dw</P>
+      <P Name="CovNameIncrementing">off</P>
+      <P Name="CovHtmlReporting">off</P>
+      <P Name="CovForceBlockReductionOff">on</P>
+      <P Name="CovEnableCumulative">on</P>
+      <P Name="covSaveCumulativeToWorkspaceVar">on</P>
+      <P Name="CovSaveSingleToWorkspaceVar">on</P>
+      <P Name="CovCumulativeVarName">covCumulativeData</P>
+      <P Name="CovCumulativeReport">off</P>
+      <P Name="CovReportOnPause">on</P>
+      <P Name="CovModelRefEnable">Off</P>
+      <P Name="CovExternalEMLEnable">off</P>
+      <P Name="CovSFcnEnable">on</P>
+      <P Name="CovBoundaryAbsTol">0.000010</P>
+      <P Name="CovBoundaryRelTol">0.010000</P>
+      <P Name="CovUseTimeInterval">off</P>
+      <P Name="CovStartTime">0</P>
+      <P Name="CovStopTime">0</P>
+    </Verification>
+    <ExternalMode>
+      <P Name="ExtModeBatchMode">off</P>
+      <P Name="ExtModeEnableFloating">on</P>
+      <P Name="ExtModeTrigType">manual</P>
+      <P Name="ExtModeTrigMode">normal</P>
+      <P Name="ExtModeTrigPort">1</P>
+      <P Name="ExtModeTrigElement">any</P>
+      <P Name="ExtModeTrigDuration">1000</P>
+      <P Name="ExtModeTrigDurationFloating">auto</P>
+      <P Name="ExtModeTrigHoldOff">0</P>
+      <P Name="ExtModeTrigDelay">0</P>
+      <P Name="ExtModeTrigDirection">rising</P>
+      <P Name="ExtModeTrigLevel">0</P>
+      <P Name="ExtModeArchiveMode">off</P>
+      <P Name="ExtModeAutoIncOneShot">off</P>
+      <P Name="ExtModeIncDirWhenArm">off</P>
+      <P Name="ExtModeAddSuffixToVar">off</P>
+      <P Name="ExtModeWriteAllDataToWs">off</P>
+      <P Name="ExtModeArmWhenConnect">on</P>
+      <P Name="ExtModeSkipDownloadWhenConnect">off</P>
+      <P Name="ExtModeLogAll">on</P>
+      <P Name="ExtModeAutoUpdateStatusClock">on</P>
+    </ExternalMode>
+    <ModelReferenceSettings>
+      <P Name="ShowModelReferenceBlockVersion">off</P>
+      <P Name="ShowModelReferenceBlockIO">off</P>
+    </ModelReferenceSettings>
+    <ConcurrentExecutionSettings>
+      <Object PropName="DataTransfer" ObjectID="11" ClassName="Simulink.GlobalDataTransfer">
+        <P Name="DefaultTransitionBetweenSyncTasks" Class="char">Ensure deterministic transfer (maximum delay)</P>
+        <P Name="DefaultTransitionBetweenAsyncTasks" Class="char">Ensure data integrity only</P>
+        <P Name="DefaultTransitionBetweenContTasks" Class="char">Ensure deterministic transfer (minimum delay)</P>
+        <P Name="DefaultExtrapolationMethodBetweenContTasks" Class="char">None</P>
+      </Object>
+      <P Name="ExplicitPartitioning">off</P>
+    </ConcurrentExecutionSettings>
+    <SystemDefaults>
+      <P Name="PaperOrientation">landscape</P>
+      <P Name="PaperPositionMode">auto</P>
+      <P Name="PaperType">usletter</P>
+      <P Name="PaperUnits">inches</P>
+      <P Name="TiledPaperMargins">[0.500000, 0.500000, 0.500000, 0.500000]</P>
+      <P Name="TiledPageScale">1</P>
+      <P Name="ShowPageBoundaries">off</P>
+      <P Name="ModelBrowserVisibility">off</P>
+      <P Name="ScreenColor">white</P>
+    </SystemDefaults>
+    <BlockDefaults>
+      <P Name="ForegroundColor">black</P>
+      <P Name="BackgroundColor">white</P>
+      <P Name="DropShadow">off</P>
+      <P Name="NamePlacement">normal</P>
+      <P Name="FontName">Helvetica</P>
+      <P Name="FontSize">10</P>
+      <P Name="FontWeight">normal</P>
+      <P Name="FontAngle">normal</P>
+      <P Name="ShowName">on</P>
+      <P Name="BlockRotation">0</P>
+      <P Name="BlockMirror">off</P>
+    </BlockDefaults>
+    <AnnotationDefaults>
+      <P Name="HorizontalAlignment">center</P>
+      <P Name="VerticalAlignment">middle</P>
+      <P Name="ForegroundColor">black</P>
+      <P Name="BackgroundColor">white</P>
+      <P Name="DropShadow">off</P>
+      <P Name="FontName">Helvetica</P>
+      <P Name="FontSize">10</P>
+      <P Name="FontWeight">normal</P>
+      <P Name="FontAngle">normal</P>
+      <P Name="UseDisplayTextAsClickCallback">off</P>
+    </AnnotationDefaults>
+    <LineDefaults>
+      <P Name="FontName">Helvetica</P>
+      <P Name="FontSize">9</P>
+      <P Name="FontWeight">normal</P>
+      <P Name="FontAngle">normal</P>
+    </LineDefaults>
+    <MaskDefaults>
+      <P Name="SelfModifiable">off</P>
+      <P Name="IconFrame">on</P>
+      <P Name="IconOpaque">on</P>
+      <P Name="RunInitForIconRedraw">off</P>
+      <P Name="IconRotate">none</P>
+      <P Name="PortRotate">default</P>
+      <P Name="IconUnits">autoscale</P>
+    </MaskDefaults>
+    <MaskParameterDefaults>
+      <P Name="Evaluate">on</P>
+      <P Name="Tunable">on</P>
+      <P Name="NeverSave">off</P>
+      <P Name="Internal">off</P>
+      <P Name="ReadOnly">off</P>
+      <P Name="Enabled">on</P>
+      <P Name="Visible">on</P>
+      <P Name="ToolTip">on</P>
+    </MaskParameterDefaults>
+    <BlockParameterDefaults>
+      <Block BlockType="Clock">
+        <P Name="DisplayTime">off</P>
+        <P Name="Decimation">10</P>
+      </Block>
+      <Block BlockType="RateTransition">
+        <P Name="Integrity">on</P>
+        <P Name="Deterministic">on</P>
+        <P Name="X0">0</P>
+        <P Name="OutPortSampleTimeOpt">Specify</P>
+        <P Name="OutPortSampleTimeMultiple">1</P>
+        <P Name="OutPortSampleTime">-1</P>
+      </Block>
+      <Block BlockType="Scope">
+      </Block>
+      <Block BlockType="Step">
+        <P Name="Time">1</P>
+        <P Name="Before">0</P>
+        <P Name="After">1</P>
+        <P Name="SampleTime">-1</P>
+        <P Name="VectorParams1D">on</P>
+        <P Name="ZeroCross">on</P>
+      </Block>
+      <Block BlockType="Sum">
+        <P Name="IconShape">round</P>
+        <P Name="Inputs">++</P>
+        <P Name="CollapseMode">All dimensions</P>
+        <P Name="CollapseDim">1</P>
+        <P Name="InputSameDT">off</P>
+        <P Name="AccumDataTypeStr">Inherit: Inherit via internal rule</P>
+        <P Name="OutMin">[]</P>
+        <P Name="OutMax">[]</P>
+        <P Name="OutDataTypeStr">Inherit: Inherit via internal rule</P>
+        <P Name="LockScale">off</P>
+        <P Name="RndMeth">Floor</P>
+        <P Name="SaturateOnIntegerOverflow">off</P>
+        <P Name="SampleTime">-1</P>
+      </Block>
+      <Block BlockType="ToWorkspace">
+        <P Name="VariableName">simulink_output</P>
+        <P Name="MaxDataPoints">1000</P>
+        <P Name="Decimation">1</P>
+        <P Name="SaveFormat">Array</P>
+        <P Name="Save2DSignal">3-D array (concatenate along third dimension)</P>
+        <P Name="FixptAsFi">off</P>
+        <P Name="NumInputs">1</P>
+        <P Name="SampleTime">0</P>
+      </Block>
+      <Block BlockType="ZeroOrderHold">
+        <P Name="SampleTime">1</P>
+      </Block>
+    </BlockParameterDefaults>
+    <System>
+      <P Name="Location">[2147, 36, 3524, 1031]</P>
+      <P Name="ZoomFactor">145</P>
+      <P Name="ReportName">simulink-default.rpt</P>
+      <P Name="SIDHighWatermark">86</P>
+      <Block BlockType="Clock" Name="Clock" SID="2">
+        <P Name="Position">[520, 45, 540, 65]</P>
+        <P Name="ZOrder">-2</P>
+      </Block>
+      <Block BlockType="Reference" Name="Discretized controller" SID="58">
+        <P Name="Ports">[1, 1]</P>
+        <P Name="Position">[235, 202, 330, 238]</P>
+        <P Name="ZOrder">6</P>
+        <P Name="LibraryVersion">4.0</P>
+        <P Name="SourceBlock">cstblocks/LTI System</P>
+        <P Name="SourceType">LTI Block</P>
+        <P Name="RTWMemSecFuncInitTerm">Inherit from model</P>
+        <P Name="RTWMemSecFuncExecute">Inherit from model</P>
+        <P Name="RTWMemSecDataConstants">Inherit from model</P>
+        <P Name="RTWMemSecDataInternal">Inherit from model</P>
+        <P Name="RTWMemSecDataParameters">Inherit from model</P>
+        <P Name="ContentPreviewEnabled">off</P>
+        <P Name="sys">D</P>
+        <P Name="IC">[]</P>
+      </Block>
+      <Block BlockType="Reference" Name="Plant" SID="9">
+        <P Name="Ports">[1, 1]</P>
+        <P Name="Position">[475, 202, 570, 238]</P>
+        <P Name="ZOrder">-3</P>
+        <P Name="LibraryVersion">4.0</P>
+        <P Name="SourceBlock">cstblocks/LTI System</P>
+        <P Name="SourceType">LTI Block</P>
+        <P Name="RTWMemSecFuncInitTerm">Inherit from model</P>
+        <P Name="RTWMemSecFuncExecute">Inherit from model</P>
+        <P Name="RTWMemSecDataConstants">Inherit from model</P>
+        <P Name="RTWMemSecDataInternal">Inherit from model</P>
+        <P Name="RTWMemSecDataParameters">Inherit from model</P>
+        <P Name="ContentPreviewEnabled">off</P>
+        <P Name="sys">P</P>
+        <P Name="IC">[]</P>
+      </Block>
+      <Block BlockType="RateTransition" Name="Rate Transition" SID="83">
+        <P Name="Position">[150, 199, 190, 241]</P>
+        <P Name="ZOrder">4935</P>
+        <P Name="OutPortSampleTime">T</P>
+      </Block>
+      <Block BlockType="Scope" Name="Scope" SID="66">
+        <P Name="Ports">[1]</P>
+        <P Name="Position">[255, 94, 285, 126]</P>
+        <P Name="ZOrder">2406</P>
+        <P Name="NumInputPorts">1</P>
+        <P Name="Floating">off</P>
+        <P Name="Open">off</P>
+        <P Name="TimeRange">auto</P>
+        <P Name="TickLabels">OneTimeTick</P>
+        <P Name="ShowLegends">off</P>
+        <P Name="LimitDataPoints">off</P>
+        <P Name="MaxDataPoints">5000</P>
+        <P Name="SaveToWorkspace">off</P>
+        <P Name="SaveName">ScopeData1</P>
+        <P Name="YMin">-7.94103</P>
+        <P Name="YMax">8.76404</P>
+        <P Name="SampleInput">off</P>
+        <P Name="SampleTime">-1</P>
+        <P Name="ZoomMode">on</P>
+        <P Name="Grid">on</P>
+        <P Name="DataFormat">StructureWithTime</P>
+        <P Name="Decimation">1</P>
+        <List>
+          <P Name="ListType">AxesTitles</P>
+          <P Name="axes1">%&lt;SignalLabel&gt;</P>
+        </List>
+        <List>
+          <P Name="ListType">ScopeGraphics</P>
+          <P Name="FigureColor">[0.156862745098039 0.156862745098039 0.156862745098039]</P>
+          <P Name="AxesColor">[0 0 0]</P>
+          <P Name="AxesTickColor">[0.686274509803922 0.686274509803922 0.686274509803922]</P>
+          <P Name="LineColors">[1 1 0;1 0 1;0 1 1;1 0 0;0 1 0;0 0 1]</P>
+          <P Name="LineStyles">-|-|-|-|-|-</P>
+          <P Name="LineWidths">[0.5 0.5 0.5 0.5 0.5 0.5]</P>
+          <P Name="MarkerStyles">none|none|none|none|none|none</P>
+        </List>
+        <P Name="Location">[276 327 826 754]</P>
+      </Block>
+      <Block BlockType="Scope" Name="Scope1" SID="11">
+        <P Name="Ports">[1]</P>
+        <P Name="Position">[150, 94, 180, 126]</P>
+        <P Name="ZOrder">-4</P>
+        <P Name="NumInputPorts">1</P>
+        <P Name="Floating">off</P>
+        <P Name="Open">off</P>
+        <P Name="TimeRange">auto</P>
+        <P Name="TickLabels">OneTimeTick</P>
+        <P Name="ShowLegends">off</P>
+        <P Name="LimitDataPoints">off</P>
+        <P Name="MaxDataPoints">5000</P>
+        <P Name="SaveToWorkspace">off</P>
+        <P Name="SaveName">ScopeData1</P>
+        <P Name="YMin">-7.94103</P>
+        <P Name="YMax">8.76404</P>
+        <P Name="SampleInput">off</P>
+        <P Name="SampleTime">-1</P>
+        <P Name="ZoomMode">on</P>
+        <P Name="Grid">on</P>
+        <P Name="DataFormat">StructureWithTime</P>
+        <P Name="Decimation">1</P>
+        <List>
+          <P Name="ListType">AxesTitles</P>
+          <P Name="axes1">%&lt;SignalLabel&gt;</P>
+        </List>
+        <List>
+          <P Name="ListType">ScopeGraphics</P>
+          <P Name="FigureColor">[0.156862745098039 0.156862745098039 0.156862745098039]</P>
+          <P Name="AxesColor">[0 0 0]</P>
+          <P Name="AxesTickColor">[0.686274509803922 0.686274509803922 0.686274509803922]</P>
+          <P Name="LineColors">[1 1 0;1 0 1;0 1 1;1 0 0;0 1 0;0 0 1]</P>
+          <P Name="LineStyles">-|-|-|-|-|-</P>
+          <P Name="LineWidths">[0.5 0.5 0.5 0.5 0.5 0.5]</P>
+          <P Name="MarkerStyles">none|none|none|none|none|none</P>
+        </List>
+        <P Name="Location">[183 402 1063 819]</P>
+      </Block>
+      <Block BlockType="Scope" Name="Scope2" SID="14">
+        <P Name="Ports">[1]</P>
+        <P Name="Position">[675, 264, 705, 296]</P>
+        <P Name="ZOrder">-5</P>
+        <P Name="NumInputPorts">1</P>
+        <P Name="Floating">off</P>
+        <P Name="Open">off</P>
+        <P Name="TimeRange">auto</P>
+        <P Name="TickLabels">OneTimeTick</P>
+        <P Name="ShowLegends">off</P>
+        <P Name="LimitDataPoints">off</P>
+        <P Name="MaxDataPoints">5000</P>
+        <P Name="SaveToWorkspace">off</P>
+        <P Name="SaveName">ScopeData2</P>
+        <P Name="YMin">-7.76404</P>
+        <P Name="YMax">8.94103</P>
+        <P Name="SampleInput">off</P>
+        <P Name="SampleTime">-1</P>
+        <P Name="ZoomMode">on</P>
+        <P Name="Grid">on</P>
+        <P Name="DataFormat">StructureWithTime</P>
+        <P Name="Decimation">1</P>
+        <List>
+          <P Name="ListType">AxesTitles</P>
+          <P Name="axes1">%&lt;SignalLabel&gt;</P>
+        </List>
+        <List>
+          <P Name="ListType">ScopeGraphics</P>
+          <P Name="FigureColor">[0.156862745098039 0.156862745098039 0.156862745098039]</P>
+          <P Name="AxesColor">[0 0 0]</P>
+          <P Name="AxesTickColor">[0.686274509803922 0.686274509803922 0.686274509803922]</P>
+          <P Name="LineColors">[1 1 0;1 0 1;0 1 1;1 0 0;0 1 0;0 0 1]</P>
+          <P Name="LineStyles">-|-|-|-|-|-</P>
+          <P Name="LineWidths">[0.5 0.5 0.5 0.5 0.5 0.5]</P>
+          <P Name="MarkerStyles">none|none|none|none|none|none</P>
+        </List>
+        <P Name="Location">[185 488 1052 923]</P>
+      </Block>
+      <Block BlockType="Scope" Name="Scope3" SID="53">
+        <P Name="Ports">[1]</P>
+        <P Name="Position">[475, 79, 505, 111]</P>
+        <P Name="ZOrder">1</P>
+        <P Name="NumInputPorts">1</P>
+        <P Name="Floating">off</P>
+        <P Name="Open">off</P>
+        <P Name="TimeRange">auto</P>
+        <P Name="TickLabels">OneTimeTick</P>
+        <P Name="ShowLegends">off</P>
+        <P Name="LimitDataPoints">off</P>
+        <P Name="MaxDataPoints">5000</P>
+        <P Name="SaveToWorkspace">off</P>
+        <P Name="SaveName">ScopeData</P>
+        <P Name="YMin">-15.91123</P>
+        <P Name="YMax">20.79205</P>
+        <P Name="SampleInput">off</P>
+        <P Name="SampleTime">-1</P>
+        <P Name="ZoomMode">on</P>
+        <P Name="Grid">on</P>
+        <P Name="DataFormat">StructureWithTime</P>
+        <P Name="Decimation">1</P>
+        <List>
+          <P Name="ListType">AxesTitles</P>
+          <P Name="axes1">%&lt;SignalLabel&gt;</P>
+        </List>
+        <List>
+          <P Name="ListType">ScopeGraphics</P>
+          <P Name="FigureColor">[0.156862745098039 0.156862745098039 0.156862745098039]</P>
+          <P Name="AxesColor">[0 0 0]</P>
+          <P Name="AxesTickColor">[0.686274509803922 0.686274509803922 0.686274509803922]</P>
+          <P Name="LineColors">[1 1 0;1 0 1;0 1 1;1 0 0;0 1 0;0 0 1]</P>
+          <P Name="LineStyles">-|-|-|-|-|-</P>
+          <P Name="LineWidths">[0.5 0.5 0.5 0.5 0.5 0.5]</P>
+          <P Name="MarkerStyles">none|none|none|none|none|none</P>
+        </List>
+        <P Name="Location">[803 378 1333 793]</P>
+      </Block>
+      <Block BlockType="Step" Name="Step" SID="22">
+        <P Name="Position">[15, 205, 45, 235]</P>
+        <P Name="ZOrder">-6</P>
+        <P Name="Time">0</P>
+      </Block>
+      <Block BlockType="Sum" Name="Sum" SID="26">
+        <P Name="Ports">[2, 1]</P>
+        <P Name="Position">[65, 210, 85, 230]</P>
+        <P Name="ZOrder">-7</P>
+        <P Name="ShowName">off</P>
+        <P Name="Inputs">|+-</P>
+      </Block>
+      <Block BlockType="ToWorkspace" Name="To Workspace" SID="30">
+        <P Name="Ports">[1]</P>
+        <P Name="Position">[660, 205, 720, 235]</P>
+        <P Name="ZOrder">-8</P>
+        <P Name="VariableName">y_sim</P>
+        <P Name="MaxDataPoints">inf</P>
+        <P Name="SampleTime">-1</P>
+      </Block>
+      <Block BlockType="ToWorkspace" Name="To Workspace1" SID="31">
+        <P Name="Ports">[1]</P>
+        <P Name="Position">[600, 40, 660, 70]</P>
+        <P Name="ZOrder">-10</P>
+        <P Name="VariableName">t_sim</P>
+        <P Name="MaxDataPoints">inf</P>
+        <P Name="SampleTime">-1</P>
+      </Block>
+      <Block BlockType="ToWorkspace" Name="To Workspace2" SID="65">
+        <P Name="Ports">[1]</P>
+        <P Name="Position">[475, 132, 540, 158]</P>
+        <P Name="ZOrder">2405</P>
+        <P Name="VariableName">u_sim</P>
+        <P Name="MaxDataPoints">inf</P>
+      </Block>
+      <Block BlockType="ZeroOrderHold" Name="Zero-Order&#xA;Hold" SID="86">
+        <P Name="Position">[375, 205, 410, 235]</P>
+        <P Name="ZOrder">4937</P>
+        <P Name="SampleTime">T</P>
+      </Block>
+      <Line>
+        <P Name="ZOrder">1</P>
+        <P Name="Src">2#out:1</P>
+        <P Name="Dst">31#in:1</P>
+      </Line>
+      <Line>
+        <P Name="ZOrder">99</P>
+        <P Name="Src">58#out:1</P>
+        <P Name="Dst">86#in:1</P>
+      </Line>
+      <Line>
+        <P Name="ZOrder">5</P>
+        <P Name="Src">22#out:1</P>
+        <P Name="Dst">26#in:1</P>
+      </Line>
+      <Line>
+        <P Name="ZOrder">6</P>
+        <P Name="Src">9#out:1</P>
+        <P Name="Points">[30, 0]</P>
+        <Branch>
+          <P Name="ZOrder">7</P>
+          <P Name="Dst">30#in:1</P>
+        </Branch>
+        <Branch>
+          <P Name="ZOrder">8</P>
+          <P Name="Points">[0, 60]</P>
+          <Branch>
+            <P Name="ZOrder">48</P>
+            <P Name="Points">[-530, 0]</P>
+            <P Name="Dst">26#in:2</P>
+          </Branch>
+          <Branch>
+            <P Name="ZOrder">10</P>
+            <P Name="Dst">14#in:1</P>
+          </Branch>
+        </Branch>
+      </Line>
+      <Line>
+        <P Name="ZOrder">11</P>
+        <P Name="Src">26#out:1</P>
+        <P Name="Points">[29, 0]</P>
+        <Branch>
+          <P Name="ZOrder">87</P>
+          <P Name="Dst">83#in:1</P>
+        </Branch>
+        <Branch>
+          <P Name="ZOrder">86</P>
+          <P Name="Points">[0, -110]</P>
+          <P Name="Dst">11#in:1</P>
+        </Branch>
+      </Line>
+      <Line>
+        <P Name="ZOrder">100</P>
+        <P Name="Src">86#out:1</P>
+        <P Name="Points">[24, 0]</P>
+        <Branch>
+          <P Name="ZOrder">62</P>
+          <P Name="Dst">9#in:1</P>
+        </Branch>
+        <Branch>
+          <P Name="ZOrder">61</P>
+          <P Name="Points">[0, -75]</P>
+          <Branch>
+            <P Name="ZOrder">64</P>
+            <P Name="Dst">65#in:1</P>
+          </Branch>
+          <Branch>
+            <P Name="ZOrder">63</P>
+            <P Name="Points">[0, -50]</P>
+            <P Name="Dst">53#in:1</P>
+          </Branch>
+        </Branch>
+      </Line>
+      <Line>
+        <P Name="ZOrder">85</P>
+        <P Name="Src">83#out:1</P>
+        <P Name="Points">[13, 0]</P>
+        <Branch>
+          <P Name="ZOrder">90</P>
+          <P Name="Dst">58#in:1</P>
+        </Branch>
+        <Branch>
+          <P Name="ZOrder">89</P>
+          <P Name="Points">[0, -110]</P>
+          <P Name="Dst">66#in:1</P>
+        </Branch>
+      </Line>
+      <Annotation SID="52">
+        <P Name="Name">ECE484 - Framework for simulating sampled-data systems.
+This file simulates a continuous-time plant P being 
+controlled by a discrete-time controller D. </P>
+        <P Name="Position">[206, 36, 471, 77]</P>
+        <P Name="InternalMargins">[0, 0, 0, 0]</P>
+        <P Name="ZOrder">-1</P>
+      </Annotation>
+    </System>
+  </Model>
+</ModelInformation>

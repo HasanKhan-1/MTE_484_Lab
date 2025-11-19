@@ -252,6 +252,7 @@ zpk(X)
 zero(X)
 pole(X)
 D = minreal(W / X, 1e-6);  % Increase tolerance to remove near-zero poles
+D
 [numerator, denominator] = tfdata(D, 'v');
 format long
 %% Verify the transfer function D
