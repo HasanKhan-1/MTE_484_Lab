@@ -1,8 +1,11 @@
+clear all;
 
 % set time step
 T_inner = 0.02764604299;
-T_outer = 0.5;
+T_outer = 0.3;
 
+s = tf('s');
+t_sim =20;
 
 % does the plant have a double integrator?
 double_integrator_flag = 1;
@@ -15,7 +18,7 @@ controller_integrator_flag = 0;
 
 % PLANT FOR INNER LOOP 
 G_inner_cont = 1.998/(0.022*s^2 +s);
-G_inner_disc = c2d(G_C, T_inner);
+G_inner_disc = c2d(G_inner_cont, T_inner);
 % THIS SHOULD BE EQUIVALENT TO:
 % G_D_Inner_Loop = (0.02379*z + 0.01572)/(z^2 - 1.285*z + 0.2846)
 
@@ -44,7 +47,7 @@ D_inner_disc = tf(numD, denD, T_inner, 'Variable', 'z^-1');
 
 % PLANT FOR OUTER LOOP
 G_outer_cont = -0.231035423/(s^2); % K2 * K3 / s^2
-G_outer_disc = c2d(G_C, T_inner*20);
+G_outer_disc = c2d(G_outer_cont, T_outer);
 G_outer_disc
 [num, den] = tfdata(G_outer_disc, 'v');
 
@@ -91,7 +94,7 @@ nreal = length(stableRealPlantPoles);
 ncomplex = length(stableComplexPlantPoles);
 
 % verify that your plant is correct!
-z = tf('z',T);
+z = tf('z',T_outer);
 G = 0;
 for k=1:n
     G = G + cs(k)/(z-qs(k));
@@ -104,11 +107,45 @@ G
 %% Poles Chosen in the Simple Pole Approximation of W[z]
 
 j = sqrt(-1);
-realWPoles = [linspace(-0.8, 0.8, 20)]
-complexWPoles = generate_poles(100, 0.85, 0)
-% for checking the integrator in the controller:
-% complexWPoles = [];
+% realWPoles = [linspace(-0.8, 0.8, 20)];
+% complexWPoles = generate_poles(100, 0.8, 0);
+% % for checking the integrator in the controller:
+realWPoles = [
+    -0.0421052631578947,     0.0421052631578947,     0.631578947368421,     0.715789473684211
+];
+
+complexWPoles = [
+    0.193952716647484-0.0279704076670494j,     0.193952716647484+0.0279704076670494j, ...
+    -0.0183687878827786+0.252314461796619j,     -0.0183687878827786-0.252314461796619j, ...
+    -0.299018236954714+0.0137147354511256j,     -0.299018236954714-0.0137147354511256j, ...
+    0.398531835650761+0.0870193999797449j,     0.398531835650761-0.0870193999797449j, ...
+    0.324464937455534+0.271886933047501j,     0.324464937455534-0.271886933047501j, ...
+    0.173776713418926+0.402245763027178j,     0.173776713418926-0.402245763027178j, ...
+    -0.376772219053917+0.297393165606049j,     -0.376772219053917-0.297393165606049j, ...
+    -0.148892905076667-0.521757513427292j,     -0.148892905076667+0.521757513427292j
+];
 ps = [realWPoles complexWPoles];
+
+fprintf('complexWPoles = [\n');
+for k = 1:length(ps)
+    pole = ps(k);
+    if imag(pole) == 0
+        % Real pole
+        fprintf('    %.15g', real(pole));
+    else
+        % Complex pole
+        fprintf('    %.15g%+.15gj', real(pole), imag(pole));
+    end
+    
+    % Print comma after each pole except the last
+    if k < length(ps)
+        fprintf(',\n');
+    else
+        fprintf('\n');
+    end
+end
+fprintf('];\n');
+
 
 mreal = length(realWPoles);
 mcomplex = length(complexWPoles);
@@ -191,7 +228,7 @@ b = [zeros(m+size(beta,1),1);
 %% Determination of step response matrices
 
 % time horizon
-K = 100;
+K = 30;
 
 step_ry = zeros(K,m+nhat);
 
@@ -286,7 +323,7 @@ step_ry = step_ry * step_magnitude;
 steadyState = steadyState * step_magnitude; 
 
 Objective = 0;
-Objective = norm([w, x, xhat], 1);
+% Objective = norm([w, x, xhat], 1);
 
 % IOP constraint
 Constraints = [A*[w;x;xhat] == b];
@@ -310,7 +347,7 @@ Constraints = [Constraints,
                max(step_ry*[x;xhat]) <= 1.45*(-steadyState(1,:)*[x;xhat])];
 
 % settling time constraint
-jhat = 7/T;
+jhat = 7/T_outer;
 Constraints = [Constraints,
                max(step_ry(jhat:end,:)*[x;xhat]) <= ...
                1.02*(-steadyState(1,:)*[x;xhat]),
@@ -333,12 +370,12 @@ xhatsol = value(xhat);
 %% Plotting the solution
 
 figure(1)
-plot(T*(1:K),step_ry*[xsol;xhatsol]);
+plot(T_outer*(1:K),step_ry*[xsol;xhatsol]);
 xlabel('Time [s]');
 ylabel('y[k]');
 
 figure(2)
-plot(T*(1:K),step_ru*wsol);
+plot(T_outer*(1:K),step_ru*wsol);
 xlabel('Time [s]');
 ylabel('u[k]');
 
@@ -363,7 +400,7 @@ colorbar;
 
 %% Recover the transfer functions
 
-z = tf('z',T);
+z = tf('z', T_outer);
 
 % calculate W
 W = 0;
@@ -384,13 +421,13 @@ end
 [num,den] = tfdata(W);
 num{1} = real(num{1});
 den{1} = real(den{1});
-W = tf(num,den,T);
+W = tf(num,den,T_outer);
 
 % remove the imaginary coefficients in X
 [num,den] = tfdata(X);
 num{1} = real(num{1});
 den{1} = real(den{1});
-X = tf(num,den,T);
+X = tf(num,den,T_outer);
 
 %% Calculate D = W/X
 D = W/X;
@@ -437,3 +474,107 @@ fprintf(']\n');
 % hold on;
 % step(T_ru,'g');
 % hold off;
+
+%% Output poles with high weights (log value > 9) as separate lists
+threshold = 7;
+% Collect all high-weight poles
+high_weight_real_poles = [];
+high_weight_complex_poles = [];
+
+% Check W poles (ps)
+high_weight_w_indices = find(log(abs(wsol)) > threshold);
+for idx = high_weight_w_indices'
+    pole = ps(idx);
+    if imag(pole) == 0
+        high_weight_real_poles = [high_weight_real_poles; pole];
+    else
+        high_weight_complex_poles = [high_weight_complex_poles; pole];
+    end
+end
+
+% Check X stable poles (qs(1:nhat))
+high_weight_x_indices = find(log(abs(xhatsol)) > threshold);
+for idx = high_weight_x_indices'
+    pole = qs(idx);
+    if imag(pole) == 0
+        high_weight_real_poles = [high_weight_real_poles; pole];
+    else
+        high_weight_complex_poles = [high_weight_complex_poles; pole];
+    end
+end
+
+% Print real poles in a single row vector format with continuation (for easy copy-paste)
+fprintf('realWPoles = [\n');
+poles_per_line = 5; % Keep output manageable
+for k = 1:length(high_weight_real_poles)
+    fprintf('    %.15g', real(high_weight_real_poles(k)));
+    
+    if k < length(high_weight_real_poles)
+        % Print comma and space for separation
+        fprintf(', '); 
+        
+        % If we hit the limit, start a new line with the continuation operator
+        if mod(k, poles_per_line) == 0
+            fprintf('...\n');
+        end
+    else
+        % Last pole
+        fprintf('\n');
+    end
+end
+fprintf('];\n\n');
+
+
+% Print complex poles in a single row vector format with continuation (for easy copy-paste)
+fprintf('complexWPoles = [\n');
+poles_per_line = 2; % Print 2 complex poles (one pair) per line for readability
+for k = 1:length(high_weight_complex_poles)
+    pole = high_weight_complex_poles(k);
+    fprintf('    %.15g%+.15gj', real(pole), imag(pole));
+    
+    if k < length(high_weight_complex_poles)
+        % Print comma and space for separation
+        fprintf(', ');
+        
+        % If we hit the limit, start a new line with the continuation operator
+        if mod(k, poles_per_line) == 0
+            fprintf('...\n');
+        end
+    else
+        % Last pole
+        fprintf('\n');
+    end
+end
+fprintf('];\n');
+
+%% Output D transfer function in C++ format
+
+% Get numerator and denominator
+[num_D, den_D] = tfdata(D, 'v');
+
+% Number of terms
+OUTER_TERMS = length(num_D);
+
+% Print in C++ format
+fprintf('\nconst int OUTER_TERMS = %d;\n', OUTER_TERMS);
+fprintf('const int OUTER_ORD = OUTER_TERMS-1;\n\n');
+
+% Print numerator
+fprintf('const float outer_numerator[OUTER_TERMS] = {');
+for k = 1:length(num_D)
+    fprintf('%.15g', num_D(k));
+    if k < length(num_D)
+        fprintf(', ');
+    end
+end
+fprintf('};\n\n');
+
+% Print denominator
+fprintf('const float outer_denominator[OUTER_TERMS] = {');
+for k = 1:length(den_D)
+    fprintf('%.15g', den_D(k));
+    if k < length(den_D)
+        fprintf(', ');
+    end
+end
+fprintf('};\n\n');
