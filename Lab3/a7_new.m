@@ -1,6 +1,8 @@
 
 % set time step
-T = 0.01;
+T_inner = 0.02764604299;
+T_outer = 0.5;
+
 
 % does the plant have a double integrator?
 double_integrator_flag = 1;
@@ -8,9 +10,55 @@ double_integrator_flag = 1;
 % should the controller have an integrator?
 controller_integrator_flag = 0;
 
+
+% ------------- SIMULINK VARIABLES ----------------
+
+% PLANT FOR INNER LOOP 
+G_inner_cont = 1.998/(0.022*s^2 +s);
+G_inner_disc = c2d(G_C, T_inner);
+% THIS SHOULD BE EQUIVALENT TO:
+% G_D_Inner_Loop = (0.02379*z + 0.01572)/(z^2 - 1.285*z + 0.2846)
+
+
+% INNER CONTROLLER FROM LAB 2
+format long g
+numD = [ ...
+    0.000000000000000, ...
+    3.895902697104731, ...
+    0.587576580092025, ...
+    1.427922264042860, ...
+    1.403745515283152, ...
+    -1.058665075983055, ...
+    0.143549064767519 ];
+
+denD = [ ...
+    1.000000000000000, ...
+    0.151336487059448, ...
+    0.274529278050395, ...
+    0.167766512303242, ...
+    0.082797948273825, ...
+    0.010339519605428, ...
+    -0.007662273422280 ];
+
+D_inner_disc = tf(numD, denD, T_inner, 'Variable', 'z^-1');
+
+% PLANT FOR OUTER LOOP
+G_outer_cont = -0.231035423/(s^2); % K2 * K3 / s^2
+G_outer_disc = c2d(G_C, T_inner*20);
+G_outer_disc
+[num, den] = tfdata(G_outer_disc, 'v');
+
+% Perform partial fraction decomposition
+[G_outer_coeffs, G_outer_poles, k] = residue(num, den);
+G_outer_coeffs
+G_outer_poles
+
+
+
+% ----------------------------------------------------
 %% Plant Poles and Coefficients in its Partial Fraction Decomposition
 
-stableRealPlantPoles = [0.8];
+stableRealPlantPoles = [];
 stableComplexPlantPoles = [];
 unstablePlantPoles = [1];
 
@@ -28,12 +76,12 @@ stablePlantPoles = [stableRealPlantPoles stableComplexPlantPoles];
 qs = [stablePlantPoles unstablePlantPoles];
 
 % coefficents go in order of the poles
-cs = [2 3];
+cs = [G_outer_coeffs(1)];
 
 if double_integrator_flag
     % coefficients include both c_n for 1/(z-1) and c_(n+1) for 1/(z-1)^2 for
     %       the pole at z=1
-    c_double_integrator = 4;
+    c_double_integrator = G_outer_coeffs(2);
     cs = [cs c_double_integrator];
 end     
 
@@ -56,10 +104,10 @@ G
 %% Poles Chosen in the Simple Pole Approximation of W[z]
 
 j = sqrt(-1);
-realWPoles = [];
-complexWPoles = [0.4+0.1*j 0.4-0.1*j 0.5+0.1*j 0.5-0.1*j];
+realWPoles = [linspace(-0.8, 0.8, 20)]
+complexWPoles = generate_poles(100, 0.85, 0)
 % for checking the integrator in the controller:
-complexWPoles = [0.4+0.1*j 0.4-0.1*j 0.5+0.1*j 0.5-0.1*j 0.6+0.1*j 0.6-0.1*j];
+% complexWPoles = [];
 ps = [realWPoles complexWPoles];
 
 mreal = length(realWPoles);
@@ -143,7 +191,7 @@ b = [zeros(m+size(beta,1),1);
 %% Determination of step response matrices
 
 % time horizon
-K = 30;
+K = 100;
 
 step_ry = zeros(K,m+nhat);
 
@@ -229,31 +277,40 @@ end
 
 
 %% Defining the objective function and constraints for the optimization
+yref_initial = 0.10;
+yref_final = 0.25;
+step_magnitude = yref_final - yref_initial;
+
+step_ru = step_ru * step_magnitude;
+step_ry = step_ry * step_magnitude;
+steadyState = steadyState * step_magnitude; 
 
 Objective = 0;
+Objective = norm([w, x, xhat], 1);
 
 % IOP constraint
 Constraints = [A*[w;x;xhat] == b];
 
-% input saturation constraint
+% Input saturation constraint
 Constraints = [Constraints,
-               max(step_ru*w) <= 0.16];
+               max(step_ru*w) <= 0.7,
+               min(step_ru*w) >= -0.7];
 
 % steady state constraint
 if ~controller_integrator_flag
     Constraints = [Constraints,
-                   steadyState*[x;xhat]+1==0];
+                   steadyState*[x;xhat]+0.15==0];
 else
     Constraints = [Constraints,
-                   steadyState*[x;xhat]+[1;0;0]==[0;0;0]];
+                   steadyState*[x;xhat]+[0.15;0;0]==[0;0;0]];
 end
 
 % overshoot constraint
 Constraints = [Constraints,
-               max(step_ry*[x;xhat]) <= 1.48*(-steadyState(1,:)*[x;xhat])];
+               max(step_ry*[x;xhat]) <= 1.45*(-steadyState(1,:)*[x;xhat])];
 
 % settling time constraint
-jhat = 0.14/T;
+jhat = 7/T;
 Constraints = [Constraints,
                max(step_ry(jhat:end,:)*[x;xhat]) <= ...
                1.02*(-steadyState(1,:)*[x;xhat]),
@@ -335,6 +392,20 @@ num{1} = real(num{1});
 den{1} = real(den{1});
 X = tf(num,den,T);
 
+%% Calculate D = W/X
+D = W/X;
+
+% Get numerator and denominator
+[num_D, den_D] = tfdata(D, 'v');
+
+% Print in space-delimited format
+fprintf('Numerator: [');
+fprintf('%.15g, ', num_D);
+fprintf(']\n');
+fprintf('Denominator: [');
+fprintf('%.15g, ', den_D);
+fprintf(']\n');
+
 % find the poles and zeros of W and X (if desired)
 %zpk(W)
 %zero(W)
@@ -346,23 +417,23 @@ X = tf(num,den,T);
 %% Verify design in DT
 
 % compute D by hand
-j = sqrt(-1);
-D = (0.15246*(z-0.8423)*(z-0.8))/((z+0.4903)*(z-0.7796)*(z-0.3107));
-
-% compute T_ry and T_ru by hand  (using Nf, Dg, etc)
-T_ry = (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128))/...
-       (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128) + ...
-        (z+0.4903)*(z-0.7796)*(z-0.3107)*(z-1)^2*(z-0.8));
-T_ru = (0.15246*(z-0.8423)*(z-0.8)*(z-1)^2*(z-0.8))/...
-       (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128) + ...
-        (z+0.4903)*(z-0.7796)*(z-0.3107)*(z-1)^2*(z-0.8));
-
-figure(1)
-hold on;
-step(T_ry,'g');
-hold off;
-
-figure(2)
-hold on;
-step(T_ru,'g');
-hold off;
+% j = sqrt(-1);
+% D = (0.15246*(z-0.8423)*(z-0.8))/((z+0.4903)*(z-0.7796)*(z-0.3107));
+% 
+% % compute T_ry and T_ru by hand  (using Nf, Dg, etc)
+% T_ry = (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128))/...
+%        (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128) + ...
+%         (z+0.4903)*(z-0.7796)*(z-0.3107)*(z-1)^2*(z-0.8));
+% T_ru = (0.15246*(z-0.8423)*(z-0.8)*(z-1)^2*(z-0.8))/...
+%        (0.15246*(z-0.8423)*(z-0.8)*5*(z-0.7672)*(z-0.3128) + ...
+%         (z+0.4903)*(z-0.7796)*(z-0.3107)*(z-1)^2*(z-0.8));
+% 
+% figure(1)
+% hold on;
+% step(T_ry,'g');
+% hold off;
+% 
+% figure(2)
+% hold on;
+% step(T_ru,'g');
+% hold off;
