@@ -3,6 +3,8 @@ clear all;
 % set time step
 T_inner = 0.02764604299;
 T_outer = 0.3;
+K2 = 0.060911;
+K3 = -3.793;
 
 s = tf('s');
 t_sim =20;
@@ -46,7 +48,8 @@ denD = [ ...
 D_inner_disc = tf(numD, denD, T_inner, 'Variable', 'z^-1');
 
 % PLANT FOR OUTER LOOP
-G_outer_cont = -0.231035423/(s^2); % K2 * K3 / s^2
+
+G_outer_cont = (K2*K3)/(s^2); % K2 * K3 / s^2
 G_outer_disc = c2d(G_outer_cont, T_outer);
 G_outer_disc
 [num, den] = tfdata(G_outer_disc, 'v');
@@ -108,23 +111,23 @@ G
 
 j = sqrt(-1);
 % realWPoles = [linspace(-0.8, 0.8, 20)];
-% complexWPoles = generate_poles(100, 0.8, 0);
+% complexWPoles = generate_poles(100, 0.7, 0);
 % % for checking the integrator in the controller:
 realWPoles = [
-    -0.0421052631578947,     0.0421052631578947,     0.631578947368421,     0.715789473684211
+    -0.8,     0.8
 ];
 
 complexWPoles = [
-    0.193952716647484-0.0279704076670494j,     0.193952716647484+0.0279704076670494j, ...
-    -0.0183687878827786+0.252314461796619j,     -0.0183687878827786-0.252314461796619j, ...
-    -0.299018236954714+0.0137147354511256j,     -0.299018236954714-0.0137147354511256j, ...
-    0.398531835650761+0.0870193999797449j,     0.398531835650761-0.0870193999797449j, ...
-    0.324464937455534+0.271886933047501j,     0.324464937455534-0.271886933047501j, ...
-    0.173776713418926+0.402245763027178j,     0.173776713418926-0.402245763027178j, ...
-    -0.376772219053917+0.297393165606049j,     -0.376772219053917-0.297393165606049j, ...
-    -0.148892905076667-0.521757513427292j,     -0.148892905076667+0.521757513427292j
+    -0.356041752813496-0.533698669900435j,     -0.356041752813496+0.533698669900435j, ...
+    -0.202001144612428-0.616924255946602j,     -0.202001144612428+0.616924255946602j, ...
+    0.310515839994333-0.595298171601941j,     0.310515839994333+0.595298171601941j, ...
+    0.457982145181031-0.500851629422707j,     0.457982145181031+0.500851629422707j, ...
+    0.576347949408806-0.371783594598072j,     0.576347949408806+0.371783594598072j, ...
+    0.658137268028005-0.216922420308815j,     0.658137268028005+0.216922420308815j, ...
+    0.698454713425667-0.0464867001783194j,     0.698454713425667+0.0464867001783194j
 ];
 ps = [realWPoles complexWPoles];
+
 
 fprintf('complexWPoles = [\n');
 for k = 1:length(ps)
@@ -322,8 +325,8 @@ step_ru = step_ru * step_magnitude;
 step_ry = step_ry * step_magnitude;
 steadyState = steadyState * step_magnitude; 
 
-Objective = 0;
-% Objective = norm([w, x, xhat], 1);
+% Objective = 0;
+Objective = norm([w, x, xhat], 1);
 
 % IOP constraint
 Constraints = [A*[w;x;xhat] == b];
@@ -476,7 +479,7 @@ fprintf(']\n');
 % hold off;
 
 %% Output poles with high weights (log value > 9) as separate lists
-threshold = 7;
+threshold = -7.5;
 % Collect all high-weight poles
 high_weight_real_poles = [];
 high_weight_complex_poles = [];
