@@ -2,7 +2,7 @@ clear all;
 
 % set time step
 T_inner = 0.02764604299;
-T_outer = 0.5;
+T_outer = 0.4;
 K2 = 0.060911;
 K3 = -3.793;
 
@@ -108,8 +108,9 @@ G
 %% Poles Chosen in the Simple Pole Approximation of W[z]
 
 j = sqrt(-1);
+% realWPoles = [];
 % realWPoles = [linspace(-0.8, 0.8, 20)];
-% complexWPoles = generate_poles(100, 0.7, 0);
+% complexWPoles = generate_poles(100, 0.6, 0);
 % % for checking the integrator in the controller:
 realWPoles = [
     -0.631578947368421,     -0.0421052631578947,     0.0421052631578947,     0.715789473684211
