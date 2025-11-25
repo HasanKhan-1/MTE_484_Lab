@@ -474,11 +474,11 @@ Try = minreal(G * D / (1 + G * D), 1e-6);
 Tru = minreal(D / (1 + G * D), 1e-6);
 figure(4)
 hold on;
-plot(T_outer*(1:K), step_ry*[xsol;xhatsol], 'Color', [0 0 1]);title('Closed-Loop Output y[k] vs Time');xlabel('Time(s)');ylabel('Step_ry');
+plot(T_outer*(1:K), step_ry*[xsol;xhatsol], 'Color', [0 0 1]);title('Closed-Loop Output y[k] vs Time');xlabel('Time(s)');ylabel('')
 hold off;
 figure(5)
 hold on;
-plot(T_outer*(1:K),step_ru*[xsol;xhatsol], 'Color', [0 0 1]);title('Outer-Loop Controller Output u[k] vs Time');xlabel('Time(s)');ylabel('Step_ru')
+plot(T_outer*(1:K),step_ru*[xsol;xhatsol], 'Color', [0 0 1]);title('Outer-Loop Controller Output u[k] vs Time');
 hold off;
 
 %% Output poles with high weights (log value > 9) as separate lists
