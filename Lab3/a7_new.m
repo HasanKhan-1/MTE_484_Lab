@@ -85,8 +85,6 @@ qs = [stablePlantPoles unstablePlantPoles];
 cs = [G_outer_coeffs(1)];
 
 if double_integrator_flag
-    % coefficients include both c_n for 1/(z-1) and c_(n+1) for 1/(z-1)^2 for
-    %       the pole at z=1
     c_double_integrator = G_outer_coeffs(2);
     cs = [cs c_double_integrator];
 end     
@@ -136,14 +134,11 @@ fprintf('complexWPoles = [\n');
 for k = 1:length(ps)
     pole = ps(k);
     if imag(pole) == 0
-        % Real pole
         fprintf('    %.15g', real(pole));
     else
-        % Complex pole
         fprintf('    %.15g%+.15gj', real(pole), imag(pole));
     end
     
-    % Print comma after each pole except the last
     if k < length(ps)
         fprintf(',\n');
     else
